@@ -30,7 +30,6 @@ const searchIndex = new MiniSearch({
     });
   }
 
-  console.log(documents[17])
   searchIndex.addAll(documents);
 
 searchIndex.search('signals').forEach(result => {

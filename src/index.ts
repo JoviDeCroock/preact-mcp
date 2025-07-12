@@ -27,13 +27,13 @@ const dataSource = new PreactDataSource();
 const tools: Tool[] = [
   {
     name: 'query_preact_docs',
-    description: 'Query Preact documentation and code from multiple repositories (preact, preact-iso, signals)',
+    description: 'Query Preact documentation from multiple repositories.',
     inputSchema: {
       type: 'object',
       properties: {
         query: {
           type: 'string',
-          description: 'The search query for Preact documentation or code',
+          description: 'The search query for the Preact documentation',
         },
         repository: {
           type: 'string',
@@ -52,7 +52,7 @@ const tools: Tool[] = [
       properties: {
         repository: {
           type: 'string',
-          enum: ['preact', 'preact-iso', 'signals'],
+          enum: PACKAGES.map(pkg => pkg.name),
           description: 'The repository to get README from',
         },
       },
@@ -61,7 +61,7 @@ const tools: Tool[] = [
   },
   {
     name: 'list_preact_repositories',
-    description: 'List all available Preact repositories that can be queried',
+    description: 'List all available Preact repositories that can be queried, this allows you to have information about the Preact ecosystem.',
     inputSchema: {
       type: 'object',
       properties: {},
