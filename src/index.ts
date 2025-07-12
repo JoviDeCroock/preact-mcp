@@ -8,6 +8,7 @@ import {
   Tool,
 } from '@modelcontextprotocol/sdk/types.js';
 import { PreactDataSource } from './datasource.js';
+import { PACKAGES, Repository } from './constants.js';
 
 const server = new Server(
   {
@@ -36,14 +37,9 @@ const tools: Tool[] = [
         },
         repository: {
           type: 'string',
-          enum: ['preact', 'preact-iso', 'signals', 'all'],
-          description: 'Which repository to search in (default: all)',
-        },
-        type: {
-          type: 'string',
-          enum: ['docs', 'code', 'readme', 'all'],
-          description: 'Type of content to search (default: all)',
-        },
+          enum: PACKAGES.map(pkg => pkg.name),
+          description: 'Which repository to search in (default: preact)',
+        }
       },
       required: ['query'],
     },
@@ -97,19 +93,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case 'query_preact_docs':
         return await dataSource.queryDocs(
           args.query as string,
-          (args.repository as string) || 'all',
-          (args.type as string) || 'all'
+          (args.repository as Repository || 'preact'),
         );
 
       case 'get_preact_readme':
-        return await dataSource.getReadme(args.repository as string);
+        return await dataSource.getReadme(args.repository as Repository);
 
       case 'list_preact_repositories':
         return {
           content: [
             {
               type: 'text',
-              text: JSON.stringify(dataSource.getRepositories(), null, 2),
+              text: JSON.stringify(PACKAGES, null, 2),
             },
           ],
         };

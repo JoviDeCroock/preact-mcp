@@ -1,47 +1,21 @@
 import fetch from 'node-fetch';
-
-interface Repository {
-  name: string;
-  description: string;
-  readmeUrl: string;
-  docsUrl?: string;
-}
+import { PACKAGES, Repository } from './constants';
 
 export class PreactDataSource {
-  private repositories: Repository[] = [
-    {
-      name: 'preact',
-      description: 'Fast 3kB React alternative with the same modern API',
-      readmeUrl: 'https://raw.githubusercontent.com/preactjs/preact/refs/heads/main/README.md',
-      docsUrl: 'https://preactjs.com/',
-    },
-    {
-      name: 'preact-iso',
-      description: 'Isomorphic utilities for Preact',
-      readmeUrl: 'https://raw.githubusercontent.com/preactjs/preact-iso/refs/heads/main/README.md',
-    },
-    {
-      name: 'signals',
-      description: 'Reactive state management for Preact',
-      readmeUrl: 'https://raw.githubusercontent.com/preactjs/signals/refs/heads/main/README.md',
-    },
-  ];
-
   private cache = new Map<string, { data: string; timestamp: number }>();
   private cacheTimeout = 5 * 60 * 1000; // 5 minutes
 
-  getRepositories(): Repository[] {
-    return this.repositories;
-  }
-
-  async getReadme(repository: string) {
-    const repo = this.repositories.find(r => r.name === repository);
+  async getReadme(repository: Repository) {
+    const repo = PACKAGES.find(r => r.name === repository);
     if (!repo) {
       throw new Error(`Repository '${repository}' not found`);
     }
 
     const content = await this.fetchWithCache(repo.readmeUrl);
-    
+    if (!content) {
+      throw new Error(`Failed to fetch README for ${repo.name}`);
+    }
+
     return {
       content: [
         {
@@ -52,41 +26,36 @@ export class PreactDataSource {
     };
   }
 
-  async queryDocs(query: string, repository: string = 'all', type: string = 'all') {
-    const repos = repository === 'all' 
-      ? this.repositories 
-      : this.repositories.filter(r => r.name === repository);
-
-    if (repos.length === 0) {
+  async queryDocs(query: string, repository: Repository) {
+    const repo = PACKAGES.find(r => r.name === repository);
+    if (!repo) {
       throw new Error(`Repository '${repository}' not found`);
     }
 
     const results: string[] = [];
 
-    for (const repo of repos) {
-      try {
-        if (type === 'readme' || type === 'all') {
-          const readme = await this.fetchWithCache(repo.readmeUrl);
-          const matches = this.searchInText(readme, query);
+    try {
+      if (repo.docsUrl) {
+        try {
+          const docsContent = await this.fetchDocumentation(repo.docsUrl);
+          const matches = this.searchInText(docsContent, query);
           if (matches.length > 0) {
-            results.push(`## ${repo.name} README Results:\n${matches.join('\n\n')}`);
+            results.push(`## ${repo.name} Documentation Results:\n${matches.join('\n\n')}`);
           }
+        } catch (error) {
+          results.push(`## ${repo.name} Documentation: Unable to fetch (${error instanceof Error ? error.message : 'Unknown error'})`);
         }
-
-        if (repo.docsUrl && (type === 'docs' || type === 'all')) {
-          try {
-            const docsContent = await this.fetchDocumentation(repo.docsUrl);
-            const matches = this.searchInText(docsContent, query);
-            if (matches.length > 0) {
-              results.push(`## ${repo.name} Documentation Results:\n${matches.join('\n\n')}`);
-            }
-          } catch (error) {
-            results.push(`## ${repo.name} Documentation: Unable to fetch (${error instanceof Error ? error.message : 'Unknown error'})`);
-          }
+      } 
+      
+      if (repository !== 'preact') {
+        const readme = await this.fetchWithCache(repo.readmeUrl);
+        const matches = this.searchInText(readme, query);
+        if (matches.length > 0) {
+          results.push(`## ${repo.name} README Results:\n${matches.join('\n\n')}`);
         }
-      } catch (error) {
-        results.push(`## ${repo.name}: Error - ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
+    } catch (error) {
+      results.push(`## ${repo.name}: Error - ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 
     const responseText = results.length > 0 
