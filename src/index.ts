@@ -27,18 +27,22 @@ const dataSource = new PreactDataSource();
 const tools: Tool[] = [
   {
     name: 'query_preact_docs',
-    description: 'Query Preact documentation from multiple repositories.',
+    description: 'Search Preact documentation with semantic understanding. Supports queries about concepts (hooks, signals), specific APIs (useState, useEffect), patterns (state management, routing), and troubleshooting. Provides contextual information, code examples, and related concepts.',
     inputSchema: {
       type: 'object',
       properties: {
         query: {
           type: 'string',
-          description: 'The search query for the Preact documentation',
+          description: 'Search query - can be concepts like "state management", specific APIs like "useState", or problem descriptions like "form validation"',
         },
         repository: {
           type: 'string',
           enum: PACKAGES.map(pkg => pkg.name),
           description: 'Which repository to search in (default: preact)',
+        },
+        includeExamples: {
+          type: 'boolean',
+          description: 'Include code examples in results (default: true)',
         }
       },
       required: ['query'],
@@ -94,6 +98,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return await dataSource.queryDocs(
           args.query as string,
           (args.repository as Repository || 'preact'),
+          args.includeExamples !== false // Default to true
         );
 
       case 'get_preact_readme':

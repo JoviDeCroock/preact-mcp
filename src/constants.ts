@@ -33,7 +33,7 @@ export const PACKAGES: Package[] = [
   },
   {
     name: '@preact/signals-react',
-    description: 'The Preact Signals React library, which provides a reactive state management system for Preact applications using React compatibility.',
+    description: 'The Signals React library, which provides a reactive state management system for Preact applications using React compatibility.',
     readmeUrl: 'https://raw.githubusercontent.com/preactjs/signals/main/packages/react/README.md',
   },
   {
@@ -48,17 +48,17 @@ export const PACKAGES: Package[] = [
   },
   {
     name: 'playwright-ct',
-    description: 'The Playwright component testing integration for Preact',
+    description: 'The Playwright component testing integration for Preact applications, allowing you to test Preact components in isolation.',
     readmeUrl: 'https://raw.githubusercontent.com/preactjs/playwright-ct/main/README.md',
   },
   {
     name: 'vitest-browser-preact',
-    description: 'The Vitest browser Preact integration',
+    description: 'The Vitest browser Preact integration for testing Preact applications in the browser.',
     readmeUrl: 'https://raw.githubusercontent.com/jovidecroock/vitest-browser-preact/main/README.md',
   },
   {
     name: 'htm',
-    description: 'The HTM library used with Preact',
+    description: 'The HTM library used with Preact, this can be used to write JSX-like syntax without a build step.',
     readmeUrl: 'https://raw.githubusercontent.com/developit/htm/master/README.md',
   }
 ]
