@@ -26,16 +26,12 @@ cd preact-mcp
 
 2. Install dependencies:
 ```bash
-npm install
-# or
-yarn install
-# or
 pnpm install
 ```
 
 3. Build the project:
 ```bash
-npm run build
+pnpm build
 ```
 
 ## Usage
@@ -44,24 +40,28 @@ npm run build
 
 Start the MCP server:
 ```bash
-npm start
-# or for development
-npm run dev
+pnpm dev
 ```
 
 ### Claude Desktop Integration
 
-Add to your Claude Desktop configuration (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
+Add to your Claude Desktop/Cursor configuration
 
 ```json
 {
   "mcpServers": {
     "preact-mcp": {
-      "command": "node",
-      "args": ["/path/to/preact-mcp/dist/index.js"]
+      "command": "npx",
+      "args": ["-y", "preact-mcp"]
     }
   }
 }
+```
+
+Or to Claude code
+
+```
+claude mcp add preact npx -y preact-mcp
 ```
 
 ## Available Tools
