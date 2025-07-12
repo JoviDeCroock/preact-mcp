@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.15.0",
-    "node-fetch": "^3.3.2"
+    "minisearch": "^7.1.2"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
