@@ -1,9 +1,7 @@
 import MiniSearch from 'minisearch';
 import { PACKAGES, Repository } from './constants';
 
-const SPLIT_POINT = `---
-
-**Description:**`;
+const SPLIT_POINT = `------`;
 
 export class PreactDataSource {
   private cache = new Map<string, { data: string; timestamp: number }>();
