@@ -6,7 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsc",
-		"format": "biome format",
+		"format": "biome format --write",
 		"start": "node dist/index.js",
 		"dev": "tsx src/index.ts"
 	},
