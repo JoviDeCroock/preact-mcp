@@ -1,21 +1,23 @@
 {
-  "name": "preact-mcp",
-  "version": "1.0.0",
-  "description": "MCP server for Preact documentation and code queries",
-  "main": "dist/index.js",
-  "type": "module",
-  "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "tsx src/index.ts"
-  },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.15.0",
-    "minisearch": "^7.1.2"
-  },
-  "devDependencies": {
-    "@types/node": "^20.0.0",
-    "tsx": "^4.20.0",
-    "typescript": "^5.8.0"
-  }
+	"name": "preact-mcp",
+	"version": "1.0.0",
+	"description": "MCP server for Preact documentation and code queries",
+	"main": "dist/index.js",
+	"type": "module",
+	"scripts": {
+		"build": "tsc",
+    "format": "biome format",
+		"start": "node dist/index.js",
+		"dev": "tsx src/index.ts"
+	},
+	"dependencies": {
+		"@modelcontextprotocol/sdk": "^1.15.0",
+		"minisearch": "^7.1.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.1.1",
+		"@types/node": "^20.0.0",
+		"tsx": "^4.20.0",
+		"typescript": "^5.8.0"
+	}
 }
