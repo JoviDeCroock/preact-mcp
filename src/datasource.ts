@@ -1,5 +1,5 @@
 import MiniSearch from "minisearch";
-import { PACKAGES, Repository } from "./constants";
+import { PACKAGES, Repository } from "./constants.js";
 
 const SPLIT_POINT = `------\n`;
 

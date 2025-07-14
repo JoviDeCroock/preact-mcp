@@ -68,7 +68,7 @@ export const PACKAGES: Package[] = [
 		description:
 			"The Create Preact app tool, which helps you set up a new Preact project with sensible defaults.",
 		readmeUrl:
-			"https://raw.githubusercontent.com/preactjs/create-preact/main/README.md",
+			"https://raw.githubusercontent.com/preactjs/create-preact/master/README.md",
 	},
 	{
 		name: "playwright-ct",
