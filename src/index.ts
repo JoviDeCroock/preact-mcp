@@ -14,6 +14,7 @@ const server = new Server(
 	{
 		name: "preact-mcp",
 		version: "1.0.0",
+		description: "Query Preact documentation and ecosystem"
 	},
 	{
 		capabilities: {
@@ -128,8 +129,22 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 async function main() {
 	const transport = new StdioServerTransport();
-	await server.connect(transport);
-	console.error("Preact MCP server running on stdio");
+	try {
+		await server.connect(transport);
+		console.error("Preact MCP server v1.0.0 running on stdio");
+	} catch (error) {
+		console.error("Failed to start server:", error);
+		// Retry once after 1 second
+		setTimeout(async () => {
+			try {
+				await server.connect(transport);
+				console.error("Preact MCP server v1.0.0 running on stdio (retry successful)");
+			} catch (retryError) {
+				console.error("Retry failed:", retryError);
+				process.exit(1);
+			}
+		}, 1000);
+	}
 }
 
 main().catch((error) => {
