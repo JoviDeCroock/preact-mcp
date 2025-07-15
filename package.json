@@ -1,8 +1,14 @@
 {
 	"name": "preact-mcp",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Model Context Protocol server for Preact documentation",
-	"keywords": ["mcp", "preact", "modelcontextprotocol", "ai", "llm"],
+	"keywords": [
+		"mcp",
+		"preact",
+		"modelcontextprotocol",
+		"ai",
+		"llm"
+	],
 	"main": "dist/index.js",
 	"type": "module",
 	"author": "Jovi De Croock <jovi@preact.dev>",
