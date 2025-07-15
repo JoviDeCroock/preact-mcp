@@ -176,7 +176,6 @@ export class PreactDataSource {
 			prefix: true,
 			boost: {
 				section: 2,
-				type: 3, // Boost based on content type
 			},
 			combineWith: "OR",
 		});
