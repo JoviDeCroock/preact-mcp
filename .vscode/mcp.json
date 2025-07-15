@@ -3,7 +3,7 @@
 		"preact-test-2": {
 			"type": "stdio",
 			"command": "node",
-			"args": ["dist/index.js"]
+			"args": ["bin.js"],
 		}
 	},
 	"inputs": []
