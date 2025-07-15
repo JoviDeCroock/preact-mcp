@@ -52,7 +52,6 @@ export class PreactDataSource {
 					const matches = this.searchInText(
 						docsContent,
 						query,
-						`${repo.name}-docs`,
 					);
 					if (matches.length > 0) {
 						results.push(
@@ -130,8 +129,6 @@ export class PreactDataSource {
 		section: string;
 		description: string;
 		context: string;
-		type: string;
-		priority: number;
 	}> {
 		const entries = text.split(SPLIT_POINT);
 		const documents = [];
@@ -154,70 +151,11 @@ export class PreactDataSource {
 				? descriptionMatch.replace(/^\*\*description:\*\*\s*/, "").trim()
 				: "";
 
-			// Detect content type and assign priority based on usefulness
-			let type = "general";
-			let priority = 5;
-
-			// High priority for practical tutorials and getting started content
-			if (
-				section.toLowerCase().includes("getting started") ||
-				section.toLowerCase().includes("tutorial") ||
-				section.toLowerCase().includes("hello world") ||
-				section.toLowerCase().includes("example")
-			) {
-				type = "tutorial";
-				priority = 1;
-			}
-
-			// High priority for code examples - these are very valuable for developers
-			if (
-				entry.includes("```jsx") ||
-				entry.includes("```js") ||
-				entry.includes("```typescript")
-			) {
-				type = "code-example";
-				priority = 2;
-			}
-
-			// Medium priority for core concepts and patterns
-			if (
-				section.toLowerCase().includes("component") ||
-				section.toLowerCase().includes("hooks") ||
-				section.toLowerCase().includes("signals") ||
-				section.toLowerCase().includes("forms") ||
-				section.toLowerCase().includes("state") ||
-				section.toLowerCase().includes("props")
-			) {
-				type = "core-concept";
-				priority = 3;
-			}
-
-			// Medium priority for setup and configuration
-			if (
-				section.toLowerCase().includes("installation") ||
-				section.toLowerCase().includes("configuration") ||
-				section.toLowerCase().includes("setup")
-			) {
-				type = "setup";
-				priority = 3;
-			}
-
-			// Lower priority for API reference (unless specifically searched for)
-			if (
-				section.toLowerCase().includes("api") ||
-				section.toLowerCase().includes("reference")
-			) {
-				type = "api-reference";
-				priority = 4;
-			}
-
 			documents.push({
 				id: `${section}-${entries.indexOf(entry)}`,
 				section,
 				description,
 				context: entry,
-				type,
-				priority,
 			});
 		}
 
@@ -228,7 +166,6 @@ export class PreactDataSource {
 	private searchInText(
 		text: string,
 		query: string,
-		repository?: string,
 	): string[] {
 		// Clear and reindex the content for this search
 		this.searchIndex.removeAll();
@@ -244,23 +181,13 @@ export class PreactDataSource {
 			combineWith: "OR",
 		});
 
-		// Sort by priority first, then by search score
 		const sortedResults = searchResults
 			.map((result) => ({
 				...result,
 				document: documents.find((doc) => doc.id === result.id),
 			}))
 			.filter((result) => result.document)
-			.sort((a, b) => {
-				// First sort by priority (lower number = higher priority)
-				const priorityDiff =
-					(a.document?.priority || 10) - (b.document?.priority || 10);
-				if (priorityDiff !== 0) return priorityDiff;
-
-				// Then by search score (higher score = better match)
-				return b.score - a.score;
-			})
-			.slice(0, 10); // Take top 10 results
+			.slice(0, 3); // Take top 3 results
 
 		const results: string[] = [];
 		const seen = new Set<string>();
@@ -270,13 +197,7 @@ export class PreactDataSource {
 				seen.add(result.id);
 
 				// Add helpful context labels for different content types
-				let context = result.document?.context || "";
-				if (
-					result.document?.type === "tutorial" ||
-					result.document?.type === "code-example"
-				) {
-					context = `**${result.document.section}** (${result.document.type})\n\n${context}`;
-				}
+				const context = result.document?.context || "";
 
 				results.push(context);
 			}
